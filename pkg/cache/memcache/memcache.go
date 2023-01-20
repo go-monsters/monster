@@ -22,7 +22,11 @@ func NewMemCache() cache.Cache {
 	return &Cache{}
 }
 
-func (c Cache) Get(ctx context.Context, key string) (interface{}, error) {
+func (c *Cache) GetClient() interface{} {
+	return c.conn
+}
+
+func (c *Cache) Get(ctx context.Context, key string) (interface{}, error) {
 	if item, err := c.conn.Get(key); err == nil {
 		return item.Value, nil
 	} else {
@@ -32,7 +36,7 @@ func (c Cache) Get(ctx context.Context, key string) (interface{}, error) {
 	}
 }
 
-func (c Cache) GetMulti(ctx context.Context, keys []string) ([]interface{}, error) {
+func (c *Cache) GetMulti(ctx context.Context, keys []string) ([]interface{}, error) {
 	rv := make([]interface{}, len(keys))
 
 	mv, err := c.conn.GetMulti(keys)
@@ -58,7 +62,7 @@ func (c Cache) GetMulti(ctx context.Context, keys []string) ([]interface{}, erro
 	return rv, merror.Error(strings.Join(keysErr, "; "))
 }
 
-func (c Cache) Put(ctx context.Context, key string, val interface{}, timeout time.Duration) error {
+func (c *Cache) Put(ctx context.Context, key string, val interface{}, timeout time.Duration) error {
 	item := memcache.Item{Key: key, Expiration: int32(timeout / time.Second)}
 	if v, ok := val.([]byte); ok {
 		item.Value = v
@@ -71,12 +75,12 @@ func (c Cache) Put(ctx context.Context, key string, val interface{}, timeout tim
 		"could not put key-value to memcache, key: %s", key)
 }
 
-func (c Cache) Delete(ctx context.Context, key string) error {
+func (c *Cache) Delete(ctx context.Context, key string) error {
 	return merror.Wrapf(c.conn.Delete(key),
 		"could not delete key-value from memcache, key: %s", key)
 }
 
-func (c Cache) Start(config string) error {
+func (c *Cache) Start(config string) error {
 	var cf map[string]string
 	if err := json.Unmarshal([]byte(config), &cf); err != nil {
 		return merror.Wrapf(err,

@@ -25,6 +25,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/gofiber/fiber/v2 v2.41.0 // indirect
 	github.com/gofiber/swagger v0.1.8 // indirect
+	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.7.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

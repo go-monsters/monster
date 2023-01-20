@@ -25,6 +25,10 @@ func NewMemoryCache() cache.Cache {
 	return &Cache{items: make(map[string]*Item)}
 }
 
+func (c *Cache) GetClient() interface{} {
+	return c
+}
+
 func (c *Cache) Get(ctx context.Context, key string) (interface{}, error) {
 	c.RLock()
 	defer c.RUnlock()

@@ -8,21 +8,22 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/go-monsters/monster/internals/logs/merror"
-	"github.com/go-monsters/monster/pkg/cache"
 	"io"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/go-monsters/monster/internals/logs/merror"
+	"github.com/go-monsters/monster/pkg/cache"
 )
 
 var (
-	FileCachePath           = "cache"     // cache directory
-	FileCacheFileSuffix     = ".bin"      // cache file suffix
-	FileCacheDirectoryLevel = 2           // cache file deep level if auto generated cache files.
-	FileCacheEmbedExpiry    time.Duration // cache expire time, default is no expire forever.
+	CachePath           = "cache"     // cache directory
+	CacheFileSuffix     = ".bin"      // cache file suffix
+	CacheDirectoryLevel = 2           // cache file deep level if auto generated cache files.
+	CacheEmbedExpiry    time.Duration // cache expire time, default is no expire forever.
 )
 
 type Cache struct {
@@ -34,6 +35,10 @@ type Cache struct {
 
 func NewFileCache() cache.Cache {
 	return &Cache{}
+}
+
+func (c *Cache) GetClient() interface{} {
+	return c
 }
 
 func (c *Cache) Get(ctx context.Context, key string) (interface{}, error) {
@@ -127,19 +132,19 @@ func (c *Cache) Start(config string) error {
 	const eeKey = "EmbedExpiry"
 
 	if _, ok := cfg[cpKey]; !ok {
-		cfg[cpKey] = FileCachePath
+		cfg[cpKey] = CachePath
 	}
 
 	if _, ok := cfg[fsKey]; !ok {
-		cfg[fsKey] = FileCacheFileSuffix
+		cfg[fsKey] = CacheFileSuffix
 	}
 
 	if _, ok := cfg[dlKey]; !ok {
-		cfg[dlKey] = strconv.Itoa(FileCacheDirectoryLevel)
+		cfg[dlKey] = strconv.Itoa(CacheDirectoryLevel)
 	}
 
 	if _, ok := cfg[eeKey]; !ok {
-		cfg[eeKey] = strconv.FormatInt(int64(FileCacheEmbedExpiry.Seconds()), 10)
+		cfg[eeKey] = strconv.FormatInt(int64(CacheEmbedExpiry.Seconds()), 10)
 	}
 	c.CachePath = cfg[cpKey]
 	c.FileSuffix = cfg[fsKey]

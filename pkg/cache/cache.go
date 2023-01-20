@@ -13,14 +13,11 @@ var (
 )
 
 type Cache interface {
+	GetClient() interface{}
 	Get(ctx context.Context, key string) (interface{}, error)
-
 	GetMulti(ctx context.Context, keys []string) ([]interface{}, error)
-
 	Put(ctx context.Context, key string, val interface{}, timeout time.Duration) error
-
 	Delete(ctx context.Context, key string) error
-
 	Start(config string) error
 }
 

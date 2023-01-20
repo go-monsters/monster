@@ -29,6 +29,10 @@ func NewRedisCache() cache.Cache {
 	return &Cache{key: defaultKey}
 }
 
+func (c *Cache) GetClient() interface{} {
+	return c.conn
+}
+
 func (c *Cache) Get(ctx context.Context, key string) (interface{}, error) {
 	client := c.conn.WithContext(ctx)
 	res := client.Get(key)
