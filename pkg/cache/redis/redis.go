@@ -9,11 +9,12 @@ import (
 
 	"github.com/go-monsters/monster/internals/logs/merror"
 	"github.com/go-monsters/monster/pkg/cache"
+
 	"github.com/go-redis/redis"
 	"go.elastic.co/apm/module/apmgoredis/v2"
 )
 
-var DefaultKey = "monsterCacheRedis"
+var defaultKey = "monsterCacheRedis"
 
 type Cache struct {
 	conn     apmgoredis.Client
@@ -25,7 +26,7 @@ type Cache struct {
 }
 
 func NewRedisCache() cache.Cache {
-	return &Cache{key: DefaultKey}
+	return &Cache{key: defaultKey}
 }
 
 func (c *Cache) Get(ctx context.Context, key string) (interface{}, error) {
@@ -80,7 +81,7 @@ func (c *Cache) Start(config string) error {
 		return merror.Wrapf(err, "could not unmarshal the config: %s", config)
 	}
 	if _, ok := cf["key"]; !ok {
-		cf["key"] = DefaultKey
+		cf["key"] = defaultKey
 	}
 	if _, ok := cf["conn"]; !ok {
 		return merror.Wrapf(err, "config missing conn field: %s", config)

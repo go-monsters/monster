@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-monsters/monster/pkg/database"
+	"github.com/go-monsters/monster/pkg/orm"
 	postgres "go.elastic.co/apm/module/apmgormv2/v2/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -16,7 +16,7 @@ type Postgresql struct {
 	db         *gorm.DB
 }
 
-func New(address string) database.Database {
+func New(address string) orm.Database {
 	return &Postgresql{
 		address: address,
 	}

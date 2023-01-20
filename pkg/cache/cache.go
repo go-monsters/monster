@@ -7,6 +7,11 @@ import (
 	"github.com/go-monsters/monster/internals/logs/merror"
 )
 
+var (
+	ErrKeyExpired  = merror.Error("the key is expired")
+	ErrKeyNotExist = merror.Error("the key isn't exist")
+)
+
 type Cache interface {
 	Get(ctx context.Context, key string) (interface{}, error)
 
