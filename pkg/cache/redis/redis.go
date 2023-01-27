@@ -116,10 +116,7 @@ func (c *Cache) Start(config string) error {
 
 	c.connectInit()
 
-	conn := c.conn.RedisClient()
-	defer func() {
-		_ = conn.Close()
-	}()
+	c.conn = apmgoredis.Wrap(c.conn.RedisClient())
 
 	return nil
 }
